@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: climarisk
+    runtime: node
+    plan: free
+    # Conecte o repositório Git (GitHub/GitLab) no painel do Render.
+    # Se fizer deploy manual (sem Git), ignore este arquivo e use:
+    #   Build Command: npm install && npm run build
+    #   Start Command: npm run start
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/cities
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AI_PROVIDER
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        sync: false
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: NVIDIA_MODEL
+        sync: false

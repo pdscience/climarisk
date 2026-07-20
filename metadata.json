@@ -1,0 +1,6 @@
+{
+  "name": "Previsão de Risco Climático",
+  "description": "Plataforma de monitoramento e previsão de risco climático regional (Sul, Norte e Nordeste) baseada em regras climatológicas, integração com dados meteorológicos e ações de prevenção automatizadas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

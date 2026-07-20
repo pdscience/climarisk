@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "leaflet/dist/leaflet.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #0f172a;
+}
+
+*::-webkit-scrollbar { width: 6px; }
+*::-webkit-scrollbar-track { background: #0f172a; }
+*::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+*::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+body {
+  font-family: var(--font-sans);
+  background-color: #070b14;
+  color: #e2e8f0;
+  overflow-x: hidden;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-scan { animation: scan-line 8s linear infinite; }
+
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.glass-card-light {
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.4);
+}
+
+.gold-glow { text-shadow: 0 0 12px rgba(251, 191, 36, 0.4); }
+.orange-glow { text-shadow: 0 0 12px rgba(249, 115, 22, 0.4); }
+
+.border-glow-gold { border-color: rgba(251, 191, 36, 0.3); box-shadow: 0 0 15px rgba(251, 191, 36, 0.1); }
+.border-glow-orange { border-color: rgba(249, 115, 22, 0.3); box-shadow: 0 0 15px rgba(249, 115, 22, 0.1); }
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.text-gold { color: #fbbf24; }
+.text-gold-light { color: #fcd34d; }
+.text-orange-bright { color: #f97316; }
+.text-metal { color: #94a3b8; }
+.text-metal-light { color: #cbd5e1; }
