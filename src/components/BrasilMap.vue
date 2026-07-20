@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { LMap, LTileLayer, LCircleMarker, LPopup, LPolygon, LMarker } from '@vue-leaflet/vue-leaflet'
 import { CITIES, useClimateRisk } from '../composables/useClimateRisk'
 import type { City } from '../types'
@@ -19,6 +20,7 @@ L.Icon.Default.mergeOptions({
 })
 
 const { selectedCityId, ensoScenario, riskData, allRisks, isLoadingMap, loadAllRisks } = useClimateRisk()
+const router = useRouter()
 
 const emit = defineEmits<{
   (e: 'select-region', region: "Sul" | "Norte" | "Nordeste" | "Sudeste" | "Centro-Oeste"): void
@@ -127,6 +129,11 @@ function getMarkerRadius(city: City) {
 
 function selectCity(cityId: string) {
   selectedCityId.value = cityId
+}
+
+function analyzeCity(cityId: string) {
+  selectedCityId.value = cityId
+  router.push(`/city/${cityId}`)
 }
 
 function selectRegion(region: RegionName) {
@@ -254,7 +261,7 @@ watch(ensoScenario, (val) => loadAllRisks(val))
               </div>
               <div class="text-slate-500">Temp Média: {{ city.historic_temp_avg }}°C</div>
               <button
-                @click="selectCity(city.id)"
+                @click="analyzeCity(city.id)"
                 class="mt-1 w-full text-white text-[10px] font-bold py-1 px-2 rounded-lg transition"
                 style="background: linear-gradient(135deg, #fbbf24, #f97316);"
               >
