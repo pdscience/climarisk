@@ -8,7 +8,7 @@ Deslizamento), dados do Open-Meteo/INPE e explicabilidade por IA.
 
 - **Frontend:** Vue 3 (Composition API + TS), Vite, Tailwind CSS v4, Leaflet, ECharts, pdfmake
 - **Backend:** Express (`server.ts`) com motor de regras + IA (NVIDIA NIM ou OpenRouter)
-- **Deploy:** Netlify (SPA estático + Netlify Functions serverless)
+- **Deploy:** Render (Web Service gratuito — servidor Express único)
 
 ## Como rodar localmente
 
@@ -46,56 +46,70 @@ Deslizamento), dados do Open-Meteo/INPE e explicabilidade por IA.
 | `npm run start` | Sobe o backend compilado (`dist/server.cjs`) |
 | `npm run lint` | `vue-tsc --noEmit` |
 
-## Deploy no Render (gratuito)
+## Deploy no Render (gratuito) — COMO ATUALIZAR O CÓDIGO
 
 O app é um **servidor Express único** que já serve tanto o frontend (build do Vite
-em `dist/`) quanto a API `/api/*`. Nenhuma conversão para funções serverless
-é necessária — o Render roda o `server.ts` como está.
+em `dist/`) quanto a API `/api/*`. O Render roda o `server.ts` como está.
 
-### Passo a passo
+**O deploy é automático:** o GitHub é a "ponte" entre você e o Render. Você **nunca
+sobe nada direto pro Render** — você só faz `git push` pro GitHub e o Render reconstrói
+sozinho.
 
-1. Crie o repositório Git (o projeto ainda não tem `.git`):
-   ```bash
-   git init
-   git add -A
-   git commit -m "ClimaRisk MVP"
-   git remote add origin <seu-repo-github>
-   git push -u origin main
-   ```
-2. No [Render](https://render.com): **New → Web Service → conecte o repo**.
-3. Configuração (o `render.yaml` já pré-preenche quase tudo):
-   - **Runtime:** Node
-   - **Build Command:** `npm install && npm run build`
-   - **Start Command:** `npm run start`
-   - **Plano:** Free
-4. **Environment Variables** (mesmas do `.env`):
-   - `AI_PROVIDER`, `OPENROUTER_API_KEY` (ou `NVIDIA_API_KEY`), modelos, etc.
-   - `NODE_ENV=production` (já no `render.yaml`)
-5. **Create Web Service.** O Render roda o build e sobe o servidor na porta
-   que ele injeta via `PORT`. Acesse a URL gerada (`.onrender.com`).
+```
+Seu código local  →  git push (GitHub)  →  Render detecta  →  rebuild + deploy automático
+```
 
-### Sem Git? Deploy manual
+### Checklist para atualizar a URL do Render
 
-No painel do Render escolha **Deploy an existing image / Manual**:
-- Build Command: `npm install && npm run build`
-- Start Command: `npm run start`
-- Faça upload do projeto zipado.
+Toda vez que alterar algum arquivo do projeto:
 
-### Observações
+```bash
+# 1. (opcional, mas recomendado) teste localmente se compila sem erro
+npm run build
 
-- O `render.yaml` define `healthCheckPath: /api/cities` para o Render
-  verificar que o servidor está vivo.
+# 2. salve as alterações no Git
+git add -A
+git commit -m "descreva o que mudou"
+git push origin main
+```
+
+Pronto. Em alguns minutos a URL `https://climarisk-543i.onrender.com` já estará
+com a nova versão.
+
+### Onde acompanhar o deploy no Render
+
+No painel do [Render](https://dashboard.render.com) → serviço **climarisk**:
+- **Aba "Deploy":** histórico de deploys e status
+  (`Build in progress` → `Live` verde, ou erro se o build falhou).
+- **Aba "Logs":** saída do build e do servidor em tempo real.
+
+### Configuração (já feita via `render.yaml`)
+
+- **Runtime:** Node
+- **Build Command:** `npm install && npm run build`
+- **Start Command:** `npm run start`
+- **Plano:** Free
+- **Health Check:** `/api/cities` (o Render usa para saber que o servidor está vivo)
+- **Environment Variables** (definidas no painel do Render, não no Git):
+  `AI_PROVIDER`, `OPENROUTER_API_KEY` (ou `NVIDIA_API_KEY`), modelos, `NODE_ENV=production`.
+
+> Nenhuma chave de IA? O sistema ainda funciona com **regras técnicas** (fallback).
+
+### Observações importantes
+
+- **Free tier "dorme"** após ~15 min sem tráfego. A primeira visita depois de um
+  tempo demora ~20s para "acordar" — é normal, não é erro de deploy.
 - O `server.ts` usa `process.env.PORT || 3000`, então funciona tanto
   localmente quanto no Render.
 - O cache de IA (1h) é em memória por instância.
+- **Nunca** commite o `.env` (ele está no `.gitignore`). As chaves de produção
+  ficam nas Environment Variables do painel do Render.
 
 ## Estrutura
 
 ```
-server.ts                  Backend Express (app exportado p/ função)
-netlify/
-  functions/api.ts        Netlify Function (serverless-http sobre o app)
-netlify.toml              Config de build, função e redirects
+server.ts                  Backend Express único (serve frontend + API /api/*)
+render.yaml                Config do Web Service no Render
 src/
   components/             AppLayout, BrasilMap, RiskGauge
   pages/                  Dashboard, CityDetail, Ranking, Prevention, CrisisRoom, etc.
