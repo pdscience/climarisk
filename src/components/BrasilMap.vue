@@ -9,7 +9,7 @@ import * as L from 'leaflet'
 const props = withDefaults(defineProps<{
   mapHeight?: string
 }>(), {
-  mapHeight: 'h-[550px]',
+  mapHeight: 'h-[720px]',
 })
 
 delete (L.Icon.Default.prototype as any)._getIconUrl
