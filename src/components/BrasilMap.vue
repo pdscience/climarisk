@@ -32,7 +32,7 @@ const activeLayer = ref("dark")
 const showLayerSelector = ref(false)
 
 // Custom div icons (pin for cities, flame for fire hotspots)
-function cityIcon(color: string, selected: boolean) {
+function cityIcon(color: string, selected: boolean): any {
   const size = selected ? 38 : 30
   return L.divIcon({
     className: 'city-pin',
@@ -47,7 +47,7 @@ function cityIcon(color: string, selected: boolean) {
   })
 }
 
-function fireIcon() {
+function fireIcon(): any {
   return L.divIcon({
     className: 'fire-pin',
     html: `<div style="width:26px;height:26px;transform:translate(-50%,-100%);">

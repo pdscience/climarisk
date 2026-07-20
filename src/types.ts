@@ -57,7 +57,7 @@ export interface OperationalImpact {
 export interface PreventativeAction {
   destinatario: string;
   acao: string;
-  prioridade: "Baixa" | "Média" | "Alta" | "Crítica";
+  prioridade: "Imediata" | "Baixa" | "Média" | "Alta" | "Crítica";
 }
 
 export interface RiskReport {
