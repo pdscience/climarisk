@@ -31,6 +31,36 @@ const mapCenter = ref<[number, number]>([-14.235, -51.925])
 const activeLayer = ref("dark")
 const showLayerSelector = ref(false)
 
+// Custom div icons (pin for cities, flame for fire hotspots)
+function cityIcon(color: string, selected: boolean) {
+  const size = selected ? 38 : 30
+  return L.divIcon({
+    className: 'city-pin',
+    html: `<div style="width:${size}px;height:${size}px;transform:translate(-50%,-100%);">
+      <svg viewBox="0 0 24 24" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));">
+        <path d="M12 2C7.6 2 4 5.6 4 10c0 5.2 6.1 11 7.3 12.2.6.5 1.5.5 2.1 0C14.6 21 20 15.2 20 10c0-4.4-3.6-8-8-8z" fill="${color}" stroke="#fff" stroke-width="1.5"/>
+        <circle cx="12" cy="10" r="3" fill="#fff"/>
+      </svg>
+    </div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
+  })
+}
+
+function fireIcon() {
+  return L.divIcon({
+    className: 'fire-pin',
+    html: `<div style="width:26px;height:26px;transform:translate(-50%,-100%);">
+      <svg viewBox="0 0 24 24" width="26" height="26" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));">
+        <path d="M12 2c0 3-4 4-4 8a4 4 0 0 0 8 0c0-1.5-1-2.5-1.5-3.5C16 8 17 10 17 12a5 5 0 0 1-10 0c0-4 5-6 5-10z" fill="#f97316" stroke="#fff" stroke-width="1"/>
+        <path d="M12 9c0 2-2 2.5-2 4.5a2 2 0 0 0 4 0c0-1-.8-1.6-.8-2.3C14 12.5 13 11.5 13 9z" fill="#fbbf24"/>
+      </svg>
+    </div>`,
+    iconSize: [26, 26],
+    iconAnchor: [13, 26],
+  })
+}
+
 const mapLayers: Record<string, { name: string; url: string; attribution: string }> = {
   dark: {
     name: "Escuro",
@@ -225,6 +255,7 @@ watch(ensoScenario, (val) => loadAllRisks(val))
           v-for="(hotspot, i) in fireHotspots"
           :key="`fire-${i}`"
           :lat-lng="[hotspot.lat, hotspot.lon]"
+          :icon="fireIcon()"
         >
           <LPopup>
             <div class="text-xs space-y-1 min-w-[140px]">
@@ -236,16 +267,12 @@ watch(ensoScenario, (val) => loadAllRisks(val))
           </LPopup>
         </LMarker>
 
-        <!-- City Markers as Circles (colored by REAL risk) -->
-        <LCircleMarker
+        <!-- City Markers as Pins (colored by REAL risk) -->
+        <LMarker
           v-for="city in CITIES"
           :key="city.id"
           :lat-lng="[city.lat, city.lon]"
-          :radius="getMarkerRadius(city)"
-          :color="getMarkerColor(city)"
-          :fill-color="getMarkerColor(city)"
-          :fill-opacity="0.95"
-          :weight="city.id === selectedCityId ? 3 : 1"
+          :icon="cityIcon(getMarkerColor(city), city.id === selectedCityId)"
           @click="selectCity(city.id)"
         >
           <LPopup>
