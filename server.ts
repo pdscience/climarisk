@@ -578,6 +578,7 @@ app.post("/api/climate-risk", async (req, res) => {
     let isAiGenerated = false;
 
     const ai = getAIClient();
+    const provider = (process.env.AI_PROVIDER || "openrouter").toLowerCase();
     console.log("[DEBUG] AI_PROVIDER=" + process.env.AI_PROVIDER + " | ai client?" + !!ai + " | model=" + getAIModel());
 
     if (ai) {
@@ -617,7 +618,6 @@ Pontuações calculadas pelas heurísticas técnicas do sistema:
 
 Gere o relatório estruturado em português, detalhando a correlação dos fenômenos (ex. como o El Niño/La Niña atua nesta região e como isso maximiza o perigo atual). Identifique impactos específicos e ações mitigadoras altamente práticas para gestores municipais, Defesa Civil, produtores agrícolas locais e para a população.`;
 
-        const provider = (process.env.AI_PROVIDER || "openrouter").toLowerCase();
         const responseFormat =
           provider === "nvidia"
             ? { type: "json_object" as const }
