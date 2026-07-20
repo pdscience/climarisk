@@ -915,9 +915,15 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
+    const indexPath = path.join(distPath, "index.html");
+    console.log(`[PROD] cwd=${process.cwd()} | dist exists=${require("fs").existsSync(distPath)} | index.html exists=${require("fs").existsSync(indexPath)}`);
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+      if (require("fs").existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        res.status(200).send("<h1>ClimaRisk</h1><p>Build ainda não disponível. Verifique o log de build no Render.</p>");
+      }
     });
   }
 
