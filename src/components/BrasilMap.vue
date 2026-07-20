@@ -28,7 +28,7 @@ const emit = defineEmits<{
 
 const mapZoom = ref(4)
 const mapCenter = ref<[number, number]>([-14.235, -51.925])
-const activeLayer = ref("dark")
+const activeLayer = ref("light")
 const showLayerSelector = ref(false)
 
 // Custom div icons (pin for cities, flame for fire hotspots)
