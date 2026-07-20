@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { LMap, LTileLayer, LCircleMarker, LPopup, LPolygon, LMarker } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LPopup, LPolygon, LMarker } from '@vue-leaflet/vue-leaflet'
 import { CITIES, useClimateRisk } from '../composables/useClimateRisk'
 import type { City } from '../types'
 import * as L from 'leaflet'
@@ -296,7 +296,7 @@ watch(ensoScenario, (val) => loadAllRisks(val))
               </button>
             </div>
           </LPopup>
-        </LCircleMarker>
+        </LMarker>
       </LMap>
 
       <!-- Legend Overlay -->
